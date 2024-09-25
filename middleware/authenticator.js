@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
-const User = require('../schemas/user');
+const User = require('../models/user');
 
 //verifying the user with the token secret key
 const authMiddleware = async (req, res, next) => {
