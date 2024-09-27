@@ -6,7 +6,9 @@ const authenticator = require('../middleware/authenticator');
 bookmarkRoutes.get('/getYourBookmarks/:id', async (req, res, next) => {
   try {
     const yourBookmarks = await Bookmark.find({ createdBy: req.params.id });
-    res.status(200).json(yourBookmarks);
+    console.log(yourBookmarks, 'yourBookmarks');
+
+    res.status(200).json(yourBookmarks[0].bookmarks);
   } catch (error) {
     next(error);
   }
