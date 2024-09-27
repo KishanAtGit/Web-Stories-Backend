@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const db = require('./config/db');
 require('dotenv').config();
 const authRoutes = require('./routes/auth');
-const authenticator = require('./middleware/authenticator');
 const storyRoutes = require('./routes/story');
 
 const PORT = process.env.PORT;
