@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/auth', authRoutes);
-app.use('/api/story', authenticator, storyRoutes);
+app.use('/api/story', storyRoutes);
 
 //error handling middleware
 app.use((err, req, res, next) => {
