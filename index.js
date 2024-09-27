@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const db = require('./config/db');
 require('dotenv').config();
 const authRoutes = require('./routes/auth');
+const authenticator = require('./middleware/authenticator');
 const storyRoutes = require('./routes/story');
+const bookmarkRoutes = require('./routes/bookmarks');
 
 const PORT = process.env.PORT;
 
@@ -15,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/story', storyRoutes);
+app.use('/api/bookmark', authenticator, bookmarkRoutes);
 
 //error handling middleware
 app.use((err, req, res, next) => {
