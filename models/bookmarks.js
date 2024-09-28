@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const bookmarkSchema = new mongoose.Schema({
   bookmarks: [
     {
+      storyId: String,
+      slideId: String,
       heading: String,
       description: String,
       imageURL: String,
