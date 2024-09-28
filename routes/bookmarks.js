@@ -1,7 +1,6 @@
 const express = require('express');
 const bookmarkRoutes = express();
 const Bookmark = require('../models/bookmarks');
-const authenticator = require('../middleware/authenticator');
 
 bookmarkRoutes.get('/getYourBookmarks/:id', async (req, res, next) => {
   try {
@@ -13,15 +12,38 @@ bookmarkRoutes.get('/getYourBookmarks/:id', async (req, res, next) => {
   }
 });
 
-bookmarkRoutes.post('/createBookmarks', async (req, res, next) => {
+bookmarkRoutes.post('/updateBookmark', async (req, res, next) => {
   try {
-    const { bookmarks, createdBy } = req.body;
-    const newBookmark = new Bookmark({
-      bookmarks,
-      createdBy,
-    });
-    await newBookmark.save();
-    res.status(201).json({ message: 'Bookmark Created Successfully!' });
+    const { bookmarksData, createdBy } = req.body;
+
+    let existingBookmark = await Bookmark.findOne({ createdBy });
+
+    if (existingBookmark) {
+      const slideIndex = existingBookmark.bookmarks.findIndex(
+        bookmark => bookmark.slideId === bookmarksData.slideId
+      );
+
+      if (slideIndex !== -1) {
+        existingBookmark.bookmarks.splice(slideIndex, 1);
+        await existingBookmark.save();
+        return res
+          .status(200)
+          .json({ message: 'Bookmark removed successfully!' });
+      } else {
+        existingBookmark.bookmarks.push(bookmarksData);
+        await existingBookmark.save();
+        return res
+          .status(201)
+          .json({ message: 'Bookmark added successfully!' });
+      }
+    } else {
+      const newBookmark = new Bookmark({
+        bookmarks: [bookmarksData],
+        createdBy,
+      });
+      await newBookmark.save();
+      return res.status(201).json({ message: 'Bookmark added successfully!' });
+    }
   } catch (error) {
     next(error);
   }
