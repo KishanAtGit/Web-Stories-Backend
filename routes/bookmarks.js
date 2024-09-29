@@ -6,6 +6,10 @@ bookmarkRoutes.get('/getYourBookmarks/:id', async (req, res, next) => {
   try {
     const yourBookmarks = await Bookmark.find({ createdBy: req.params.id });
 
+    if (!yourBookmarks.length) {
+      return res.status(404).json({ message: 'No bookmarks found' });
+    }
+
     res.status(200).json(yourBookmarks[0].bookmarks);
   } catch (error) {
     next(error);
@@ -38,7 +42,7 @@ bookmarkRoutes.post('/updateBookmark', async (req, res, next) => {
       }
     } else {
       const newBookmark = new Bookmark({
-        bookmarks: [bookmarksData],
+        bookmarks: [{ ...bookmarksData }],
         createdBy,
       });
       await newBookmark.save();
